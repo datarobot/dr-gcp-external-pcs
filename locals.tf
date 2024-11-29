@@ -54,3 +54,6 @@ locals {
     "me-central2" = "MIDDLE_EAST_CENTRAL_2"
   }
 }
+
+variable "atlas_public_key" {}
+variable "atlas_private_key" {}
