@@ -68,3 +68,32 @@ resource "google_sql_database_instance" "postgres_instance" {
     ]
   }
 }
+
+resource "random_password" "postgres" {
+  length           = 20
+  special          = false
+  override_special = "_"
+  min_lower        = 1
+  min_upper        = 1
+  min_numeric      = 1
+  min_special      = 1
+}
+
+resource "google_sql_user" "postgres" {
+  name     = "postgres"
+  instance = google_sql_database_instance.postgres_instance.name
+  password = random_password.postgres.result
+}
+
+resource "google_secret_manager_secret" "postgres_password" {
+  secret_id = "${var.project_name}-postgres-password"
+
+  labels = var.labels
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "postgres_password" {
+  secret      = google_secret_manager_secret.postgres_password.id
+  secret_data = random_password.postgres.result
