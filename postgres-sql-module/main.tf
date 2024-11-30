@@ -14,7 +14,7 @@ resource "google_sql_database_instance" "postgres_instance" {
     ip_configuration {
       ipv4_enabled       = false
       private_network    = var.vpc_id
-      allocated_ip_range = var.address_space_name
+      allocated_ip_range = var.pg_address_space_name
       require_ssl        = false
       ssl_mode           = "ENCRYPTED_ONLY" # Only allows connections using SSL/TLS encryption. Certificates will not be verified.
     }
