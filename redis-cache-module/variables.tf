@@ -3,11 +3,6 @@ variable "project_name" {
   type        = string
 }
 
-variable "labels" {
-  description = "Labels to Apply"
-  type        = map(string)
-}
-
 variable "memory_size_gb" {
   type        = number
   description = "GBs of ram for redis"
@@ -19,6 +14,6 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "address_space_name" {
+variable "redis_address_space_name" {
   description = "Name of reserved address space used for the Redis private network service"
 }
