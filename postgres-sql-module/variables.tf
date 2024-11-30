@@ -22,3 +22,8 @@ variable "production" {
 variable "pg_address_space_name" {
   description = "Name of reserved address space used for the PostgreSQL private network service"
 }
+
+variable "postgres_subnet_cidr" {
+  description = "Postgres CIDR Range"
+  type        = string
+}
