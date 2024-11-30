@@ -19,6 +19,6 @@ variable "production" {
   type        = bool
 }
 
-variable "address_space_name" {
+variable "pg_address_space_name" {
   description = "Name of reserved address space used for the PostgreSQL private network service"
 }
