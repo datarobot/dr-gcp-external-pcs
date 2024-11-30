@@ -6,6 +6,7 @@ module "postgresql-db" {
   disk_size             = local.pgsql_disk_size
   vpc_id                = local.vpc_id
   pg_address_space_name = local.postgres_address_name
+  postgres_cidr_range   = local.postgres_cidr_range
 }
 
 module "redis" {
