@@ -13,11 +13,6 @@ variable "gcp_region" {
   type        = string
 }
 
-variable "labels" {
-  description = "Labels to Apply"
-  type        = map(string)
-}
-
 variable "atlas_org_id" {
   description = "atlas datarobot organization id"
   type        = string
