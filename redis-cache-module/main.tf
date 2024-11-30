@@ -1,3 +1,20 @@
+resource "google_compute_global_address" "redis" {
+  name          = "${var.project_name}-redis"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  address       = split("/", var.redis_subnet_cidr)[0]
+  prefix_length = split("/", var.redis_subnet_cidr)[1]
+  network       = var.vpc_network_id
+}
+
+resource "google_service_networking_connection" "private_service_connection" {
+  network = var.vpc_network_id
+  service = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [
+    google_compute_global_address.redis.name
+  ]
+}
+
 resource "google_redis_instance" "redis" {
   name           = "redis"
   tier           = "STANDARD_HA"
@@ -5,7 +22,7 @@ resource "google_redis_instance" "redis" {
 
   authorized_network = var.vpc_id
   connect_mode       = "PRIVATE_SERVICE_ACCESS"
-  reserved_ip_range  = var.redis_reserved_ip_range
+  reserved_ip_range  = google_compute_global_address.redis.name
   # transit_encryption_mode = "SERVER_AUTHENTICATION"
 
   auth_enabled = true
