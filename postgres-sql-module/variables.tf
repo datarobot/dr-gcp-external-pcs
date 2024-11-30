@@ -9,6 +9,11 @@ variable "vpc_id" {
   type        = string
 }
 
+variable "vpc_network_id" {
+  description = "VPC Network ID"
+  type        = string
+}
+
 variable "project_name" {
   description = "Customer Name"
   type        = string
