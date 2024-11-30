@@ -1,11 +1,11 @@
 module "postgresql-db" {
-  source             = "./modules/postgres-sql-module"
-  project_name       = local.project_name
-  production         = local.environment == "production"
-  labels             = local.default_labels
-  disk_size          = local.pgsql_disk_size
-  vpc_id             = local.vpc_id
-  address_space_name = local.postgres_address_name
+  source                = "./modules/postgres-sql-module"
+  project_name          = local.project_name
+  production            = local.environment == "production"
+  labels                = local.default_labels
+  disk_size             = local.pgsql_disk_size
+  vpc_id                = local.vpc_id
+  pg_address_space_name = local.postgres_address_name
 }
 
 module "redis" {
