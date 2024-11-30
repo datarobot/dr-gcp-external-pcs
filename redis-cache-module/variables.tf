@@ -1,3 +1,8 @@
+variable "labels" {
+  description = "Labels to Apply"
+  type        = map(string)
+}
+
 variable "project_name" {
   description = "Customer Name"
   type        = string
