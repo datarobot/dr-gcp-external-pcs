@@ -3,6 +3,11 @@ variable "labels" {
   type        = map(string)
 }
 
+variable "gcp_project_name" {
+  description = "GCP Project ID"
+  type        = string
+}
+
 variable "project_name" {
   description = "Customer Name"
   type        = string

@@ -1,4 +1,5 @@
 resource "google_compute_global_address" "postgres" {
+  project       = var.project_name
   name          = "${var.project_name}-postgres"
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
@@ -16,7 +17,8 @@ resource "google_service_networking_connection" "private_service_connection_pg" 
 }
 
 resource "google_sql_database_instance" "postgres_instance" {
-  name                = var.project_name
+  project             = var.project_name
+  name                = "${var.project_name}-postgres"
   database_version    = "POSTGRES_13"
   deletion_protection = var.production
 
@@ -97,12 +99,14 @@ resource "random_password" "postgres" {
 }
 
 resource "google_sql_user" "postgres" {
+  project  = var.project_name
   name     = "postgres"
   instance = google_sql_database_instance.postgres_instance.name
   password = random_password.postgres.result
 }
 
 resource "google_secret_manager_secret" "postgres_password" {
+  project   = var.project_name
   secret_id = "${var.project_name}-postgres-password"
 
   labels = var.labels
@@ -114,3 +118,4 @@ resource "google_secret_manager_secret" "postgres_password" {
 resource "google_secret_manager_secret_version" "postgres_password" {
   secret      = google_secret_manager_secret.postgres_password.id
   secret_data = random_password.postgres.result
+}

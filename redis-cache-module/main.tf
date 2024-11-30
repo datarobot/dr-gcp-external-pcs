@@ -1,4 +1,5 @@
 resource "google_compute_global_address" "redis" {
+  project       = var.gcp_project_name
   name          = "${var.project_name}-redis"
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
@@ -16,6 +17,7 @@ resource "google_service_networking_connection" "private_service_connection" {
 }
 
 resource "google_redis_instance" "redis" {
+  project        = var.gcp_project_name
   name           = "redis"
   tier           = "STANDARD_HA"
   memory_size_gb = var.memory_size_gb
@@ -46,6 +48,7 @@ resource "google_redis_instance" "redis" {
 }
 
 resource "google_secret_manager_secret" "redis_password" {
+  project   = var.gcp_project_name
   secret_id = "${var.project_name}-redis-password"
 
   labels = var.labels

@@ -1,3 +1,8 @@
+variable "labels" {
+  description = "Labels to Apply"
+  type        = map(string)
+}
+
 variable "disk_size" {
   type        = number
   description = "disk size in GBs"
@@ -24,11 +29,8 @@ variable "production" {
   type        = bool
 }
 
-variable "pg_address_space_name" {
-  description = "Name of reserved address space used for the PostgreSQL private network service"
-}
-
 variable "postgres_subnet_cidr" {
   description = "Postgres CIDR Range"
   type        = string
 }
+

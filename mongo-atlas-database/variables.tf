@@ -1,3 +1,8 @@
+variable "labels" {
+  description = "Labels to Apply"
+  type        = map(string)
+}
+
 variable "gcp_project_name" {
   description = "GCP Project ID"
   type        = string
@@ -76,10 +81,10 @@ variable "termination_protection_enabled" {
 
 variable "chosen_copy_region" {
   type        = string
-  description = "get current region cluster is provisioned"
+  description = "Get current region cluster is provisioned"
 
   validation {
     condition     = var.chosen_copy_region != null
-    error_message = "chosen_copy_region must be set to a valid region, add a region if it does not exist"
+    error_message = "Chosen_copy_region must be set to a valid region, add a region if it does not exist."
   }
 }

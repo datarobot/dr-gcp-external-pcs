@@ -10,7 +10,7 @@ resource "mongodbatlas_project" "gcp_atlas" {
 }
 
 
-resource "mongodbatlas_cluster" "cluster" {
+resource "mongodbatlas_advanced_cluster" "cluster" {
   project_id                     = mongodbatlas_project.gcp_atlas.id
   name                           = "${var.project_name}-dratlas"
   mongo_db_major_version         = var.mongodb_version
@@ -18,27 +18,29 @@ resource "mongodbatlas_cluster" "cluster" {
   pit_enabled                    = true
   termination_protection_enabled = var.termination_protection_enabled
   version_release_system         = "LTS"
+  backup_enabled                 = true
   replication_specs {
     num_shards = 1
-    regions_config {
-      region_name     = var.atlas_gcp_region
-      electable_nodes = 3
-      priority        = 7
-      read_only_nodes = 0
+    region_configs {
+      provider_name = "GCP"
+      region_name   = var.atlas_gcp_region
+      priority      = 7
+      electable_specs {
+        node_count    = 3
+        instance_size = var.atlas_instance_type
+      }
+      auto_scaling {
+        disk_gb_enabled = true
+      }
     }
   }
-  cloud_backup                 = true
-  auto_scaling_disk_gb_enabled = true
-  provider_name                = "GCP"
-  provider_instance_size_name  = var.atlas_instance_type
-  disk_size_gb                 = var.atlas_disk_size
+  disk_size_gb = var.atlas_disk_size
   advanced_configuration {
     minimum_enabled_tls_protocol                                   = "TLS1_2"
     change_stream_options_pre_and_post_images_expire_after_seconds = -1
   }
   lifecycle {
     ignore_changes = [
-      provider_instance_size_name,
       disk_size_gb
     ]
   }
@@ -46,7 +48,7 @@ resource "mongodbatlas_cluster" "cluster" {
 
 resource "mongodbatlas_cloud_backup_schedule" "default" {
   project_id   = mongodbatlas_project.gcp_atlas.id
-  cluster_name = mongodbatlas_cluster.cluster.name
+  cluster_name = mongodbatlas_advanced_cluster.cluster.name
 
   policy_item_hourly {
     frequency_interval = 6 #accepted values = 1, 2, 4, 6, 8, 12 -> every n hours
@@ -79,7 +81,7 @@ resource "mongodbatlas_cloud_backup_schedule" "default" {
       "ON_DEMAND"
     ]
     region_name         = var.chosen_copy_region
-    replication_spec_id = mongodbatlas_cluster.cluster.replication_specs.*.id[0]
+    replication_spec_id = mongodbatlas_advanced_cluster.cluster.replication_specs.*.id[0]
     should_copy_oplogs  = true
   }
 }
@@ -109,7 +111,7 @@ resource "mongodbatlas_privatelink_endpoint" "gcp_atlas_pl" {
   project_id    = mongodbatlas_project.gcp_atlas.id
   provider_name = "GCP"
   region        = var.gcp_region
-  depends_on    = [mongodbatlas_cluster.cluster]
+  depends_on    = [mongodbatlas_advanced_cluster.cluster]
 }
 
 
@@ -164,6 +166,7 @@ resource "random_password" "password_atlas" {
 }
 
 resource "google_secret_manager_secret" "atlas_dbpass" {
+  project   = var.gcp_project_name
   secret_id = "${var.project_name}-mongo-password"
   labels    = var.labels
   replication {
