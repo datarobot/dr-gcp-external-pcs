@@ -1,8 +1,3 @@
-variable "labels" {
-  description = "Labels to Apply"
-  type        = map(string)
-}
-
 variable "disk_size" {
   type        = number
   description = "disk size in GBs"
