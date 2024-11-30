@@ -5,7 +5,7 @@ resource "google_redis_instance" "redis" {
 
   authorized_network = var.vpc_id
   connect_mode       = "PRIVATE_SERVICE_ACCESS"
-  reserved_ip_range  = var.redis_address_space_name
+  reserved_ip_range  = var.redis_reserved_ip_range
   # transit_encryption_mode = "SERVER_AUTHENTICATION"
 
   auth_enabled = true
