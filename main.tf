@@ -12,7 +12,7 @@ module "redis" {
   source                    = "./redis-cache-module"
   project_name              = local.project_name
   vpc_id                    = local.vpc_id
-  redis_ address_space_name = local.redis_address_name
+  redis_address_space_name = local.redis_address_name
   labels                    = local.default_labels
 }
 
