@@ -9,11 +9,11 @@ module "postgresql-db" {
 }
 
 module "redis" {
-  source             = "./redis-cache-module"
-  project_name       = local.project_name
-  vpc_id             = local.vpc_id
-  address_space_name = local.redis_address_name
-  labels             = local.default_labels
+  source                    = "./redis-cache-module"
+  project_name              = local.project_name
+  vpc_id                    = local.vpc_id
+  redis_ address_space_name = local.redis_address_name
+  labels                    = local.default_labels
 }
 
 module "mongo-atlas" {
