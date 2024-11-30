@@ -1,3 +1,20 @@
+resource "google_compute_global_address" "postgres" {
+  name          = "${var.project_name}-postgres"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  address       = split("/", var.postgres_subnet_cidr)[0]
+  prefix_length = split("/", var.postgres_subnet_cidr)[1]
+  network       = var.vpc_network_id
+}
+
+resource "google_service_networking_connection" "private_service_connection_pg" {
+  network = var.vpc_network_id
+  service = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [
+    google_compute_global_address.postgres.name
+  ]
+}
+
 resource "google_sql_database_instance" "postgres_instance" {
   name                = var.project_name
   database_version    = "POSTGRES_13"
@@ -14,7 +31,7 @@ resource "google_sql_database_instance" "postgres_instance" {
     ip_configuration {
       ipv4_enabled       = false
       private_network    = var.vpc_id
-      allocated_ip_range = var.pg_address_space_name
+      allocated_ip_range = google_compute_global_address.postgres.name
       require_ssl        = false
       ssl_mode           = "ENCRYPTED_ONLY" # Only allows connections using SSL/TLS encryption. Certificates will not be verified.
     }
