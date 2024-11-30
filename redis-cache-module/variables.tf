@@ -19,6 +19,6 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "redis_address_space_name" {
-  description = "Name of reserved address space used for the Redis private network service"
+variable "redis_reserved_ip_range" {
+  description = "Reserved address space used for the Redis private network service"
 }
