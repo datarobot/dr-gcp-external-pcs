@@ -1,6 +1,6 @@
 resource "google_sql_database_instance" "postgres_instance" {
   name                = var.project_name
-  database_version    = "POSTGRES_12"
+  database_version    = "POSTGRES_13"
   deletion_protection = var.production
 
   settings {
