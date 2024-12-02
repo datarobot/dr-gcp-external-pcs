@@ -20,15 +20,10 @@ resource "mongodbatlas_advanced_cluster" "cluster" {
   version_release_system         = "LTS"
   backup_enabled                 = true
   replication_specs {
-    zone_name  = ""
     num_shards = 1
     region_configs {
       provider_name = "GCP"
       region_name   = var.atlas_gcp_region
-      analytics_auto_scaling {}
-      read_only_specs {
-        instance_size = "M10"
-      }
       priority = 7
       electable_specs {
         node_count    = 3
@@ -37,13 +32,8 @@ resource "mongodbatlas_advanced_cluster" "cluster" {
       auto_scaling {
         disk_gb_enabled = true
       }
-      analytics_specs {
-        instance_size = "M10"
-        node_count    = 0
-      }
     }
   }
-  bi_connector_config {}
   disk_size_gb = var.atlas_disk_size
   advanced_configuration {
     minimum_enabled_tls_protocol                                   = "TLS1_2"
@@ -94,7 +84,6 @@ resource "mongodbatlas_cloud_backup_schedule" "default" {
     replication_spec_id = mongodbatlas_advanced_cluster.cluster.replication_specs.*.id[0]
     should_copy_oplogs  = true
   }
-  export {}
 }
 
 resource "mongodbatlas_database_user" "db-user" {
